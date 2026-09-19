@@ -2,7 +2,7 @@
 
 A privacy-first, read-only backup and export tool for Typeless on Windows.
 
-It preserves the local SQLite history database and the linked `.ogg` recordings so a future migration to another voice product does not depend on Typeless remaining free or online.
+It preserves the local SQLite history database and the linked `.ogg` recordings, so users can keep their own Typeless conversations even if the service changes its pricing or limits.
 
 ## What it backs up
 
@@ -37,7 +37,7 @@ python .\typeless_backup.py export-jsonl `
   --output "D:\TypelessBackups\typeless-2026-09-19\history.jsonl"
 ```
 
-The JSONL export references recordings by relative filename. It keeps audio files separate so downstream migration scripts can send them to a replacement transcription/voice service of your choice.
+The JSONL export is for local search, archival, and future tooling. This project does not implement import into Doubao or any other voice service.
 
 ## Safety
 
