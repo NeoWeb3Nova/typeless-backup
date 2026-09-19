@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backup and export Typeless Windows local history without touching the source."""
+"""Backup and export Typeless Windows/macOS local history read-only."""
 from __future__ import annotations
 
 import argparse
@@ -9,25 +9,63 @@ import os
 import shutil
 import sqlite3
 import sys
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
 
 APP_DIR_NAME = "Typeless.exe"
 DB_NAME = "typeless.db"
 RECORDINGS_DIR = "Recordings"
+SUPPORTED_PLATFORMS = {"win32", "darwin"}
+
+
+def _walk_for_databases(root: Path, max_depth: int = 4) -> list[Path]:
+    if not root.is_dir():
+        return []
+    found = []
+    root_depth = len(root.parts)
+    for directory, dirs, files in os.walk(root):
+        current = Path(directory)
+        if len(current.parts) - root_depth >= max_depth:
+            dirs[:] = []
+        if DB_NAME in files:
+            found.append(current)
+    return found
+
+
+def discover_sources(platform_name: str | None = None, env: Mapping[str, str] | None = None,
+                     home: Path | None = None) -> list[Path]:
+    """Find plausible local profiles without assuming one installation layout."""
+    platform_name = platform_name or sys.platform
+    if platform_name not in SUPPORTED_PLATFORMS:
+        return []
+    env = dict(os.environ) if env is None else env
+    home = Path.home() if home is None else Path(home)
+    roots: list[Path] = []
+    if platform_name == "win32":
+        roots.extend(Path(value) for key in ("APPDATA", "LOCALAPPDATA")
+                     if (value := env.get(key)))
+        user_profile = env.get("USERPROFILE")
+        if user_profile:
+            roots.append(Path(user_profile) / "AppData/Roaming")
+        direct = [root / APP_DIR_NAME for root in roots]
+    else:
+        roots.extend([home / "Library/Application Support", home / "Library/Containers"])
+        direct = [root / name for root in roots for name in ("Typeless", APP_DIR_NAME)]
+
+    candidates = direct + [path for root in roots for path in _walk_for_databases(root)]
+    unique = {path.resolve() for path in candidates if (path / DB_NAME).is_file()
+              and (path / RECORDINGS_DIR).is_dir()}
+    return sorted(unique, key=lambda path: path.as_posix().lower())
 
 
 def default_source() -> Path:
-    if sys.platform == "win32":
-        return Path(os.environ.get("APPDATA", "")) / APP_DIR_NAME
-    users_root = Path("/mnt/c/Users")
-    candidates = sorted(
-        (user / "AppData/Roaming" / APP_DIR_NAME for user in users_root.iterdir())
-        if users_root.is_dir() else []
-    )
+    candidates = discover_sources()
     if candidates:
         return candidates[0]
-    return Path.home() / "AppData/Roaming" / APP_DIR_NAME
+    if sys.platform not in SUPPORTED_PLATFORMS:
+        raise RuntimeError("Typeless Backup supports Windows and macOS only; Linux is not supported")
+    raise FileNotFoundError("could not discover a Typeless profile; pass --source explicitly")
 
 
 def sha256(path: Path, chunk=1024 * 1024) -> str:
@@ -76,6 +114,8 @@ def copy_recordings(source: Path, target: Path) -> tuple[int, int]:
 def backup(source: Path, output: Path) -> dict:
     source = source.expanduser().resolve()
     output = output.expanduser().resolve()
+    if output == source or source in output.parents:
+        raise ValueError("output must not be inside the Typeless source profile")
     db = source / DB_NAME
     recordings = source / RECORDINGS_DIR
     if not db.is_file():
@@ -96,7 +136,7 @@ def backup(source: Path, output: Path) -> dict:
     manifest = {
         "format": "typeless-backup-v1",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "source": "Typeless Windows local data",
+        "source": "Typeless Windows/macOS local data",
         "database": DB_NAME,
         "database_sha256": sha256(output / DB_NAME),
         "recordings_directory": RECORDINGS_DIR,
@@ -131,17 +171,20 @@ def export_jsonl(backup_dir: Path, output: Path) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Backup/export Typeless Windows local history")
+    parser = argparse.ArgumentParser(description="Backup/export Typeless Windows/macOS local history")
     sub = parser.add_subparsers(dest="command", required=True)
     p_backup = sub.add_parser("backup")
-    p_backup.add_argument("--source", type=Path, default=default_source())
+    p_backup.add_argument("--source", type=Path)
     p_backup.add_argument("--output", type=Path, required=True)
     p_export = sub.add_parser("export-jsonl")
     p_export.add_argument("--backup", type=Path, required=True)
     p_export.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "backup":
-        print(json.dumps(backup(args.source, args.output), ensure_ascii=False, indent=2))
+        source = args.source or default_source()
+        if sys.platform not in SUPPORTED_PLATFORMS:
+            parser.error("Typeless Backup supports Windows and macOS only; Linux is not supported")
+        print(json.dumps(backup(source, args.output), ensure_ascii=False, indent=2))
     else:
         print(json.dumps(export_jsonl(args.backup, args.output), ensure_ascii=False, indent=2))
     return 0

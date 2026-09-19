@@ -4,7 +4,7 @@
 
 **掌握你的语音对话，保存你的本地记录。**
 
-面向 Windows Typeless 的隐私优先、只读备份与归档工具。
+面向 Windows 和 macOS Typeless 的隐私优先、只读备份与归档工具。
 保存本地 SQLite 数据库及其关联的 OGG 录音，不向任何服务器上传你的对话内容。
 
 <p>
@@ -15,9 +15,9 @@
 
 <p>
   <a href="https://github.com/NeoWeb3Nova/typeless-backup/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT License"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-3776ab" alt="Python 3.8+"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-3776ab" alt="Python 3.10+"></a>
   <a href="https://www.sqlite.org/backup.html"><img src="https://img.shields.io/badge/storage-SQLite-003b57" alt="SQLite"></a>
-  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/platform-Windows-0078d4" alt="Windows"></a>
+  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-0078d4" alt="Windows and macOS"></a>
 </p>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## 为什么需要它
 
-Typeless 会在 Windows 本地保存语音对话记录。当产品价格、额度或服务策略发生变化时，用户仍然应该能够保留自己创建的对话和录音。
+Typeless 会在本地保存语音对话记录。当产品价格、额度或服务策略发生变化时，用户仍然应该能够保留自己创建的对话和录音。
 
 **Typeless Backup** 将这件事变成明确、可复现的本地流程：
 
@@ -56,7 +56,7 @@ Typeless 会在 Windows 本地保存语音对话记录。当产品价格、额�
 
 ```mermaid
 flowchart LR
-    A[Typeless 本地目录\n%APPDATA%\\Typeless.exe] --> B[只读 SQLite 连接]
+    A[Typeless 本地目录\nWindows/macOS 动态发现] --> B[只读 SQLite 连接]
     A --> C[Recordings\\*.ogg]
     B --> D[SQLite 在线备份\ntypeless.db]
     C --> E[逐字节复制\nRecordings\\]
@@ -75,8 +75,8 @@ flowchart LR
 
 ### 环境要求
 
-- 已安装 Typeless 的 Windows 系统
-- Python 3.8 或更高版本
+- 已安装 Typeless 的 Windows 或 macOS 系统
+- Python 3.10 或更高版本
 - 对 Typeless 本地目录具有读取权限
 - 一个空的目标目录，或一个尚不存在的目标路径
 
@@ -91,12 +91,19 @@ python .\typeless_backup.py backup `
   --output "D:\TypelessBackups\typeless-2026-09-19"
 ```
 
-工具会自动检测标准数据目录。也可以显式指定源目录：
+工具会在平台应用数据目录中搜索包含 `typeless.db` 和 `Recordings/` 的候选目录，不依赖固定用户名或 WSL 路径。也可以显式指定源目录：
 
 ```powershell
 python .\typeless_backup.py backup `
   --source "$env:APPDATA\Typeless.exe" `
   --output "D:\TypelessBackups\typeless-2026-09-19"
+```
+
+在 macOS 上：
+
+```bash
+python3 ./typeless_backup.py backup \
+  --output "$HOME/TypelessBackups/typeless-2026-09-19"
 ```
 
 备份成功后，目录结构如下：
@@ -149,7 +156,8 @@ python .\typeless_backup.py export-jsonl `
 
 ## 当前范围与限制
 
-- 当前针对已观察到的 Typeless Windows 本地布局：`%APPDATA%\Typeless.exe`，其中包含 `typeless.db` 和 `Recordings\`。
+- 当前支持 Windows 和 macOS。工具会动态发现候选本地目录，并验证其中存在 `typeless.db` 和 `Recordings/`；如果你的 Typeless 版本使用其他位置，请通过 `--source` 指定。
+- Linux 和 WSL 仅作为开发环境，备份 CLI 会明确拒绝 Linux 运行环境。
 - 这是备份与归档工具，不是 Typeless 替代品。
 - 不支持将记录导入豆包或其他语音软件。
 - 不转换 OGG 音频，不运行语音识别，也不翻译转写文本。
@@ -187,7 +195,7 @@ python -m unittest discover -s tests -v
 - [x] JSONL 归档导出
 - [ ] 版本化 schema 兼容说明
 - [ ] 可选的加密归档流程
-- [ ] 更多 Typeless 本地目录检测
+- [x] Windows/macOS 候选目录发现
 
 导入适配器、云同步和自动转写目前不在路线图中。
 

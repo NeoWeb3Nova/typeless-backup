@@ -4,7 +4,7 @@
 
 **Own your voice conversations. Keep your local history.**
 
-A privacy-first, read-only backup and archival tool for Typeless on Windows.
+A privacy-first, read-only backup and archival tool for Typeless on Windows and macOS.
 Preserve the local SQLite database and linked OGG recordings without uploading your conversations anywhere.
 
 <p>
@@ -15,9 +15,9 @@ Preserve the local SQLite database and linked OGG recordings without uploading y
 
 <p>
   <a href="https://github.com/NeoWeb3Nova/typeless-backup/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT License"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-3776ab" alt="Python 3.8+"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-3776ab" alt="Python 3.10+"></a>
   <a href="https://www.sqlite.org/backup.html"><img src="https://img.shields.io/badge/storage-SQLite-003b57" alt="SQLite"></a>
-  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/platform-Windows-0078d4" alt="Windows"></a>
+  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-0078d4" alt="Windows and macOS"></a>
 </p>
 
 </div>
@@ -26,7 +26,7 @@ Preserve the local SQLite database and linked OGG recordings without uploading y
 
 ## Why this exists
 
-Typeless stores conversation history locally on Windows. When pricing, quotas, or product policies change, users should still be able to retain the conversations and recordings they created.
+Typeless stores conversation history locally. When pricing, quotas, or product policies change, users should still be able to retain the conversations and recordings they created.
 
 **Typeless Backup** makes that preservation explicit and reproducible:
 
@@ -56,7 +56,7 @@ Your data stays on your machine. This repository contains the tool, not anyone's
 
 ```mermaid
 flowchart LR
-    A[Typeless local profile\n%APPDATA%\\Typeless.exe] --> B[Read-only SQLite connection]
+    A[Typeless local profile\nWindows/macOS discovery] --> B[Read-only SQLite connection]
     A --> C[Recordings\\*.ogg]
     B --> D[SQLite online backup\ntypeless.db]
     C --> E[Byte-preserving copy\nRecordings\\]
@@ -75,8 +75,8 @@ flowchart LR
 
 ### Requirements
 
-- Windows with Typeless installed
-- Python 3.8 or later
+- Windows or macOS with Typeless installed
+- Python 3.10 or later
 - Read access to the Typeless local profile
 - An empty destination directory or a new destination path
 
@@ -91,12 +91,19 @@ python .\typeless_backup.py backup `
   --output "D:\TypelessBackups\typeless-2026-09-19"
 ```
 
-The tool auto-detects the standard profile location. To specify it explicitly:
+The tool searches the platform's known application-data roots for a profile containing `typeless.db` and `Recordings/`. It does not depend on a fixed username or WSL path. To specify a profile explicitly:
 
 ```powershell
 python .\typeless_backup.py backup `
   --source "$env:APPDATA\Typeless.exe" `
   --output "D:\TypelessBackups\typeless-2026-09-19"
+```
+
+On macOS:
+
+```bash
+python3 ./typeless_backup.py backup \
+  --output "$HOME/TypelessBackups/typeless-2026-09-19"
 ```
 
 A successful backup contains:
@@ -149,7 +156,8 @@ This project does not claim to defeat operating-system permissions, disk encrypt
 
 ## Known scope and limitations
 
-- The tool currently targets the Windows local layout observed for Typeless: `%APPDATA%\Typeless.exe` with `typeless.db` and `Recordings\`.
+- The tool supports Windows and macOS only. It discovers candidate local profiles and validates that each contains `typeless.db` and `Recordings/`; use `--source` when your Typeless version uses another location.
+- Linux and WSL are development environments only and are intentionally rejected by the backup CLI.
 - It is a backup and archival utility, not a Typeless replacement.
 - It does not import records into Doubao or another voice application.
 - It does not convert OGG audio, run speech recognition, or translate transcripts.
@@ -187,7 +195,7 @@ The project intentionally prioritizes safe preservation before adding migration 
 - [x] JSONL archival export
 - [ ] Versioned schema compatibility notes
 - [ ] Optional encrypted archive workflow
-- [ ] Additional local Typeless layout detection
+- [x] Windows/macOS candidate profile discovery
 
 Import adapters, cloud sync, and automatic transcription are deliberately not part of the current roadmap.
 

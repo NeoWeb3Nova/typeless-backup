@@ -9,6 +9,36 @@ import typeless_backup
 
 
 class BackupTests(unittest.TestCase):
+    def test_discovers_windows_profile_without_wsl_paths(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            profile = root / "AppData" / "Roaming" / "Typeless.exe"
+            (profile / "Recordings").mkdir(parents=True)
+            (profile / "typeless.db").touch()
+            found = typeless_backup.discover_sources(
+                "win32", {"APPDATA": str(root / "AppData"), "USERPROFILE": str(root)}, root
+            )
+            self.assertEqual(found, [profile.resolve()])
+
+    def test_discovers_macos_profile(self):
+        with tempfile.TemporaryDirectory() as td:
+            home = Path(td)
+            profile = home / "Library" / "Application Support" / "Typeless"
+            (profile / "Recordings").mkdir(parents=True)
+            (profile / "typeless.db").touch()
+            self.assertEqual(typeless_backup.discover_sources("darwin", {}, home), [profile.resolve()])
+
+    def test_linux_is_not_a_supported_backup_platform(self):
+        self.assertEqual(typeless_backup.discover_sources("linux", {}, Path("/tmp")), [])
+
+    def test_backup_rejects_output_inside_source(self):
+        with tempfile.TemporaryDirectory() as td:
+            source = Path(td) / "Typeless"
+            (source / "Recordings").mkdir(parents=True)
+            (source / "typeless.db").touch()
+            with self.assertRaises(ValueError):
+                typeless_backup.backup(source, source / "archive")
+
     def test_backup_and_export(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
