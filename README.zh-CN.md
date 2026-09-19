@@ -1,0 +1,200 @@
+<div align="center">
+
+# Typeless Backup
+
+**掌握你的语音对话，保存你的本地记录。**
+
+面向 Windows Typeless 的隐私优先、只读备份与归档工具。
+保存本地 SQLite 数据库及其关联的 OGG 录音，不向任何服务器上传你的对话内容。
+
+<p>
+  <a href="./README.md">English</a> ·
+  <a href="https://github.com/NeoWeb3Nova/typeless-backup/issues">问题反馈</a> ·
+  <a href="https://github.com/NeoWeb3Nova/typeless-backup">代码仓库</a>
+</p>
+
+<p>
+  <a href="https://github.com/NeoWeb3Nova/typeless-backup/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT License"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-3776ab" alt="Python 3.8+"></a>
+  <a href="https://www.sqlite.org/backup.html"><img src="https://img.shields.io/badge/storage-SQLite-003b57" alt="SQLite"></a>
+  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/platform-Windows-0078d4" alt="Windows"></a>
+</p>
+
+</div>
+
+---
+
+## 为什么需要它
+
+Typeless 会在 Windows 本地保存语音对话记录。当产品价格、额度或服务策略发生变化时，用户仍然应该能够保留自己创建的对话和录音。
+
+**Typeless Backup** 将这件事变成明确、可复现的本地流程：
+
+- 以只读方式打开源数据库；
+- 创建一致的 SQLite 快照；
+- 复制数据库关联的 OGG 录音；
+- 生成包含数量、大小和哈希值的机器可读清单；
+- 可选地将对话记录导出为 JSONL，用于本地搜索和归档。
+
+你的数据留在自己的设备上。本仓库只包含工具，不包含任何人的对话内容。
+
+## 能做什么，以及不能做什么
+
+| 能力 | 状态 |
+|---|---|
+| 备份 `typeless.db` | 支持 |
+| 复制关联的 `Recordings/*.ogg` | 支持 |
+| 保存一致的 SQLite 快照 | 支持 |
+| 生成包含完整性信息的 manifest | 支持 |
+| 将记录导出为 JSONL | 支持 |
+| 向服务器上传数据 | **永不支持** |
+| 修改或删除 Typeless 源数据 | **永不支持** |
+| 导入豆包或其他语音软件 | 当前范围之外 |
+| 转写或翻译音频 | 当前范围之外 |
+
+## 架构
+
+```mermaid
+flowchart LR
+    A[Typeless 本地目录\n%APPDATA%\\Typeless.exe] --> B[只读 SQLite 连接]
+    A --> C[Recordings\\*.ogg]
+    B --> D[SQLite 在线备份\ntypeless.db]
+    C --> E[逐字节复制\nRecordings\\]
+    D --> F[备份目录]
+    E --> F
+    F --> G[manifest.json\n数量 · 大小 · SHA-256]
+    F --> H[可选 JSONL 导出\n本地归档/搜索]
+
+    classDef source fill:#fff7ed,stroke:#c2410c,color:#7c2d12
+    classDef safe fill:#eff6ff,stroke:#2563eb,color:#1e3a8a
+    class A,B,C source
+    class D,E,F,G,H safe
+```
+
+## 快速开始
+
+### 环境要求
+
+- 已安装 Typeless 的 Windows 系统
+- Python 3.8 或更高版本
+- 对 Typeless 本地目录具有读取权限
+- 一个空的目标目录，或一个尚不存在的目标路径
+
+不需要安装第三方 Python 依赖。
+
+### 创建备份
+
+在本仓库目录打开 PowerShell：
+
+```powershell
+python .\typeless_backup.py backup `
+  --output "D:\TypelessBackups\typeless-2026-09-19"
+```
+
+工具会自动检测标准数据目录。也可以显式指定源目录：
+
+```powershell
+python .\typeless_backup.py backup `
+  --source "$env:APPDATA\Typeless.exe" `
+  --output "D:\TypelessBackups\typeless-2026-09-19"
+```
+
+备份成功后，目录结构如下：
+
+```text
+D:\TypelessBackups\typeless-2026-09-19\
+├── typeless.db
+├── Recordings\
+│   └── *.ogg
+└── manifest.json
+```
+
+### 导出 JSONL 记录
+
+导出基于备份目录，而不是直接读取正在运行的应用数据：
+
+```powershell
+python .\typeless_backup.py export-jsonl `
+  --backup "D:\TypelessBackups\typeless-2026-09-19" `
+  --output "D:\TypelessBackups\typeless-2026-09-19\history.jsonl"
+```
+
+每一行对应一条对话记录。音频仍以独立 OGG 文件保存，并通过类似 `Recordings/<file>.ogg` 的相对路径引用。
+
+## 数据与完整性模型
+
+备份结构保持简单、透明、易检查：
+
+| 文件 | 用途 |
+|---|---|
+| `typeless.db` | Typeless 本地历史数据库的 SQLite 快照 |
+| `Recordings/*.ogg` | 原始本地语音录音，按字节复制 |
+| `manifest.json` | 备份格式、创建时间、数据库 SHA-256、文件数量、字节数和数据库统计 |
+| `history.jsonl` | 可选的 `history_v2` 记录逐行导出文件 |
+
+源数据库以只读模式打开，并通过 SQLite Online Backup API 复制。目标数据库会执行 `PRAGMA integrity_check` 校验。目标目录非空时，工具会拒绝覆盖。
+
+## 隐私与安全
+
+这个工具面向个人归档，而不是云端同步。
+
+- **不进行网络请求**：备份命令不会上传或传输你的数据。
+- **源数据只读**：不会更新、删除、清理或迁移 Typeless 数据库。
+- **目标留在本地**：请使用自己控制的磁盘或目录。
+- **输出属于私密数据**：备份包含对话文本和音频，应按个人记录保护。
+- **不要提交备份**：不要把 `typeless.db`、`Recordings`、`*.ogg` 或 `history.jsonl` 放入公开仓库。
+- **加密由用户负责**：必要时使用 BitLocker、加密压缩包或受访问控制的备份磁盘。
+
+本项目不声称能够绕过操作系统权限、磁盘加密、Typeless 账号控制，或未来 Typeless 对本地存储格式的调整。
+
+## 当前范围与限制
+
+- 当前针对已观察到的 Typeless Windows 本地布局：`%APPDATA%\Typeless.exe`，其中包含 `typeless.db` 和 `Recordings\`。
+- 这是备份与归档工具，不是 Typeless 替代品。
+- 不支持将记录导入豆包或其他语音软件。
+- 不转换 OGG 音频，不运行语音识别，也不翻译转写文本。
+- 应用运行期间可能继续写入新记录。SQLite 能提供一致的数据库快照；如果需要应用层面的严格冻结，请先关闭 Typeless。
+- 在独立确认备份有效前，请始终保留原始数据和源目录。
+
+## 开发
+
+运行自包含测试：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+测试使用临时 SQLite 数据库和模拟音频字节，不会访问用户的 Typeless 目录。
+
+## 参与贡献
+
+欢迎提交 Issue 和聚焦明确的 Pull Request。
+
+1. 描述你观察到的存储布局、错误或改进建议。
+2. 不要上传真实对话数据库、音频、转写文本、凭证或 Token。
+3. 使用模拟数据，或提供只包含 schema 的复现样例。
+4. 提交 Pull Request 前运行测试和 `git diff --check`。
+
+对于安全敏感问题，不要在公开 Issue 中发布私人数据。在专门的安全政策建立前，请通过 GitHub 私密联系渠道反馈，并只提供最小复现信息。
+
+## 路线图
+
+项目优先保证安全保存，再考虑迁移能力。
+
+- [x] 只读 SQLite 快照
+- [x] 录音文件保留
+- [x] manifest 与完整性校验
+- [x] JSONL 归档导出
+- [ ] 版本化 schema 兼容说明
+- [ ] 可选的加密归档流程
+- [ ] 更多 Typeless 本地目录检测
+
+导入适配器、云同步和自动转写目前不在路线图中。
+
+## 许可证
+
+本项目采用 [MIT License](./LICENSE) 开源。
+
+## 致谢
+
+本项目基于 Python 标准库和 SQLite Online Backup API 构建。依赖保持精简，是为了让备份路径更容易检查、理解和复现。
