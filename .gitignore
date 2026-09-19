@@ -1,0 +1,11 @@
+# Bytecode, test, and personal export/backup artifacts
+__pycache__/
+*.pyc
+*.sqlite
+*.db
+*.db-*
+*.ogg
+*.jsonl
+backup/
+exports/
+.DS_Store
