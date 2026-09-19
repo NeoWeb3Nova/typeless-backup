@@ -47,6 +47,7 @@ Typeless 会在本地保存语音对话记录。当产品价格、额度或服�
 | 保存一致的 SQLite 快照 | 支持 |
 | 生成包含完整性信息的 manifest | 支持 |
 | 将记录导出为 JSONL | 支持 |
+| 导出普通人可读的 Markdown 历史 | 支持 |
 | 向服务器上传数据 | **永不支持** |
 | 修改或删除 Typeless 源数据 | **永不支持** |
 | 导入豆包或其他语音软件 | 当前范围之外 |
@@ -128,6 +129,18 @@ python .\typeless_backup.py export-jsonl `
 
 每一行对应一条对话记录。音频仍以独立 OGG 文件保存，并通过类似 `Recordings/<file>.ogg` 的相对路径引用。
 
+### 导出可直接阅读的历史记录
+
+`history.jsonl` 是面向程序的导出格式，在普通编辑器中会比较密集。要生成带时间、转写文本和音频引用的可读版本：
+
+```powershell
+python .\typeless_backup.py export-markdown `
+  --backup "D:\TypelessBackups\typeless-2026-09-19" `
+  --output "D:\TypelessBackups\typeless-2026-09-19\history.md"
+```
+
+然后用 VS Code、Typora、Obsidian 或其他 Markdown 阅读器打开 `history.md`。
+
 ## 数据与完整性模型
 
 备份结构保持简单、透明、易检查：
@@ -138,6 +151,7 @@ python .\typeless_backup.py export-jsonl `
 | `Recordings/*.ogg` | 原始本地语音录音，按字节复制 |
 | `manifest.json` | 备份格式、创建时间、数据库 SHA-256、文件数量、字节数和数据库统计 |
 | `history.jsonl` | 可选的 `history_v2` 记录逐行导出文件 |
+| `history.md` | 可选的普通人可读历史记录，包含时间和音频引用 |
 
 源数据库以只读模式打开，并通过 SQLite Online Backup API 复制。目标数据库会执行 `PRAGMA integrity_check` 校验。目标目录非空时，工具会拒绝覆盖。
 

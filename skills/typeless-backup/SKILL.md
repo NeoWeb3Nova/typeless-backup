@@ -61,7 +61,14 @@ python[3] typeless_backup.py backup --source <Typeless-data-directory> --output 
    ```
 
    Completion criterion: the output contains one JSON object per `history_v2` record.
-4. Keep the original Typeless profile until the backup and its recording count are independently verified.
+5. For normal reading, use `export-markdown` instead of opening JSONL directly:
+
+   ```text
+   python[3] typeless_backup.py export-markdown --backup <backup-directory> --output <backup-directory>/history.md
+   ```
+
+   Completion criterion: `history.md` contains timestamped entries and readable transcript blocks.
+6. Keep the original Typeless profile until the backup and its recording count are independently verified.
 
 ## Pitfalls
 

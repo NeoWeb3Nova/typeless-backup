@@ -149,13 +149,8 @@ def backup(source: Path, output: Path) -> dict:
     return manifest
 
 
-def export_jsonl(backup_dir: Path, output: Path) -> dict:
-    db = backup_dir / DB_NAME
-    if not db.is_file():
-        raise FileNotFoundError(db)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with sqlite3.connect(f"file:{db.as_posix()}?mode=ro", uri=True) as con, output.open("w", encoding="utf-8") as out:
+def _history_records(db: Path):
+    with sqlite3.connect(f"file:{db.as_posix()}?mode=ro", uri=True) as con:
         columns = [r[1] for r in con.execute("pragma table_info(history_v2)")]
         order = "created_at, id" if "created_at" in columns else "rowid"
         for row in con.execute(f"select * from history_v2 order by {order}"):
@@ -165,8 +160,39 @@ def export_jsonl(backup_dir: Path, output: Path) -> dict:
                     record[key] = record[key].hex()
             audio_path = str(record.get("audio_local_path") or "").replace("\\", "/")
             record["audio_file"] = f"{RECORDINGS_DIR}/{audio_path.rsplit('/', 1)[-1]}"
+            yield record
+
+
+def export_jsonl(backup_dir: Path, output: Path) -> dict:
+    db = backup_dir / DB_NAME
+    if not db.is_file():
+        raise FileNotFoundError(db)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    count = 0
+    with output.open("w", encoding="utf-8") as out:
+        for record in _history_records(db):
             out.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
             count += 1
+    return {"records": count, "output": str(output)}
+
+
+def export_markdown(backup_dir: Path, output: Path) -> dict:
+    db = backup_dir / DB_NAME
+    if not db.is_file():
+        raise FileNotFoundError(db)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    count = 0
+    with output.open("w", encoding="utf-8") as out:
+        out.write("# Typeless Conversation History\n\n")
+        out.write("> Human-readable export generated from `typeless.db`.\n\n")
+        for count, record in enumerate(_history_records(db), 1):
+            out.write(f"## {count}. {record.get('created_at') or 'Unknown time'}\n\n")
+            out.write(f"- **Duration:** {record.get('duration') or 'unknown'} seconds\n")
+            out.write(f"- **Audio:** `{record['audio_file']}`\n\n")
+            text = str(record.get("refined_text") or "").strip()
+            out.write("**Transcript**\n\n")
+            out.write(("\n".join(f"> {line}" if line else ">" for line in text.splitlines())
+                       if text else "> [No transcript available]") + "\n\n")
     return {"records": count, "output": str(output)}
 
 
@@ -179,14 +205,19 @@ def main() -> int:
     p_export = sub.add_parser("export-jsonl")
     p_export.add_argument("--backup", type=Path, required=True)
     p_export.add_argument("--output", type=Path, required=True)
+    p_markdown = sub.add_parser("export-markdown")
+    p_markdown.add_argument("--backup", type=Path, required=True)
+    p_markdown.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "backup":
         source = args.source or default_source()
         if sys.platform not in SUPPORTED_PLATFORMS:
             parser.error("Typeless Backup supports Windows and macOS only; Linux is not supported")
         print(json.dumps(backup(source, args.output), ensure_ascii=False, indent=2))
-    else:
+    elif args.command == "export-jsonl":
         print(json.dumps(export_jsonl(args.backup, args.output), ensure_ascii=False, indent=2))
+    else:
+        print(json.dumps(export_markdown(args.backup, args.output), ensure_ascii=False, indent=2))
     return 0
 
 

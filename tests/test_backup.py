@@ -58,6 +58,10 @@ class BackupTests(unittest.TestCase):
             result = typeless_backup.export_jsonl(out, exported)
             self.assertEqual(result["records"], 1)
             self.assertEqual(json.loads(exported.read_text())["audio_file"], "Recordings/a.ogg")
+            readable = root / "history.md"
+            result = typeless_backup.export_markdown(out, readable)
+            self.assertEqual(result["records"], 1)
+            self.assertIn("hello", readable.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

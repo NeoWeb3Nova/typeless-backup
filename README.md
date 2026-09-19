@@ -47,6 +47,7 @@ Your data stays on your machine. This repository contains the tool, not anyone's
 | Preserve a consistent SQLite snapshot | Supported |
 | Generate a manifest with integrity metadata | Supported |
 | Export records to JSONL | Supported |
+| Export a human-readable Markdown history | Supported |
 | Upload data to a server | **Never** |
 | Modify or delete the Typeless source | **Never** |
 | Import history into Doubao or another voice service | Not in scope |
@@ -128,6 +129,18 @@ python .\typeless_backup.py export-jsonl `
 
 Each line is one conversation record. Audio remains as separate OGG files and is referenced by a relative path such as `Recordings/<file>.ogg`.
 
+### Export a human-readable history
+
+`history.jsonl` is a machine-readable export and may look dense in a normal editor. For a readable transcript with timestamps and audio references, generate Markdown:
+
+```powershell
+python .\typeless_backup.py export-markdown `
+  --backup "D:\TypelessBackups\typeless-2026-09-19" `
+  --output "D:\TypelessBackups\typeless-2026-09-19\history.md"
+```
+
+Open `history.md` in VS Code, Typora, Obsidian, or any Markdown viewer.
+
 ## Data and integrity model
 
 The backup is deliberately simple and inspectable:
@@ -138,6 +151,7 @@ The backup is deliberately simple and inspectable:
 | `Recordings/*.ogg` | Original local voice recordings, copied byte-for-byte |
 | `manifest.json` | Backup format, creation time, database SHA-256, file count, byte count, and database statistics |
 | `history.jsonl` | Optional line-delimited export of `history_v2` records |
+| `history.md` | Optional human-readable transcript export with timestamps and audio references |
 
 The source database is opened in read-only mode and copied through SQLite's online backup API. The destination database is checked with `PRAGMA integrity_check`. The command refuses to overwrite a non-empty destination.
 
