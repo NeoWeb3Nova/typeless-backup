@@ -2,19 +2,19 @@
 
 # Typeless Backup
 
-**Own your voice conversations. Keep your local history.**
+**掌握你的语音对话，保存你的本地记录。**
 
-A privacy-first, read-only backup and archival tool for Typeless on Windows and macOS.
-Preserve the local SQLite database and linked OGG recordings without uploading your conversations anywhere.
+面向 Windows 和 macOS Typeless 的隐私优先、只读备份与归档工具。
+保存本地 SQLite 数据库及其关联的 OGG 录音，不向任何服务器上传你的对话内容。
 
-![Typeless Backup local-first preservation flow](./assets/typeless-backup-flow.svg)
+![Typeless Backup 本地优先的数据保存流程](./assets/typeless-backup-flow.svg)
 
-> **Personal records should remain available to the person who created them.** Save first. Decide later.
+> **由你创建的个人记录，应该尽可能继续对你可用。** 先保存，再决定。
 
 <p>
-  <a href="./README.zh-CN.md">简体中文</a> ·
-  <a href="https://github.com/NeoWeb3Nova/typeless-backup/issues">Issues</a> ·
-  <a href="https://github.com/NeoWeb3Nova/typeless-backup">Repository</a>
+  <a href="./README.en.md">English</a> ·
+  <a href="https://github.com/NeoWeb3Nova/typeless-backup/issues">问题反馈</a> ·
+  <a href="https://github.com/NeoWeb3Nova/typeless-backup">代码仓库</a>
 </p>
 
 <p>
@@ -28,107 +28,107 @@ Preserve the local SQLite database and linked OGG recordings without uploading y
 
 ---
 
-## Why this exists
+## 为什么需要它
 
-Typeless stores conversation history locally. When pricing, quotas, or product policies change, users should still be able to retain the conversations and recordings they created.
+Typeless 会在本地保存语音对话记录。当产品价格、额度或服务策略发生变化时，用户仍然应该能够保留自己创建的对话和录音。
 
-**Typeless Backup** makes that preservation explicit and reproducible:
+**Typeless Backup** 将这件事变成明确、可复现的本地流程：
 
-- open the source database read-only;
-- create a consistent SQLite snapshot;
-- copy the linked OGG recordings;
-- write a machine-readable manifest with counts, sizes, and hashes;
-- optionally export conversation records as JSONL for local search and archival.
+- 以只读方式打开源数据库；
+- 创建一致的 SQLite 快照；
+- 复制数据库关联的 OGG 录音；
+- 生成包含数量、大小和哈希值的机器可读清单；
+- 可选地将对话记录导出为 JSONL，用于本地搜索和归档。
 
-Your data stays on your machine. This repository contains the tool, not anyone's conversations.
+你的数据留在自己的设备上。本仓库只包含工具，不包含任何人的对话内容。
 
-## Install as a Coding-Agent Skill
+## 作为 Coding-Agent Skill 安装
 
-The root `SKILL.md` is the portable skill entrypoint. It is intentionally not tied to one agent vendor. Coding agents that can read a GitHub repository and run local commands can follow it directly.
+根目录的 `SKILL.md` 是跨 Agent 的 Skill 入口，不绑定某一家 Agent 厂商。只要 Agent 能读取 GitHub 仓库并运行本地命令，就可以直接使用它。
 
-### Claude Code plugin
+### Claude Code 插件
 
-Install the packaged Claude Code plugin from this repository:
+可以通过本仓库提供的 Claude Code 插件安装：
 
 ```text
 /plugin marketplace add https://github.com/NeoWeb3Nova/typeless-backup
 /plugin install typeless-backup@typeless-backup
 ```
 
-The plugin metadata lives in `.claude-plugin/` and the packaged skill lives in `plugins/typeless-backup/`.
+插件元数据位于 `.claude-plugin/`，打包后的 Skill 位于 `plugins/typeless-backup/`。
 
-### Other coding agents
+### 其他 Coding Agent
 
-For Codex, Gemini CLI, Kimi Code, OpenCode, Hermes, or another local coding agent, provide this repository URL and ask the agent to read `SKILL.md`:
+对于 Codex、Gemini CLI、Kimi Code、OpenCode、Hermes 或其他本地 Coding Agent，提供仓库地址，并要求 Agent 先读取 `SKILL.md`：
 
 ```text
 https://github.com/NeoWeb3Nova/typeless-backup
 ```
 
-The root CLI and the Claude plugin's bundled `scripts/typeless_backup.py` use the same standard-library workflow. The skill defines the safety rules; the CLI performs the backup.
+根目录 CLI 和 Claude 插件内的 `scripts/typeless_backup.py` 使用同一套标准库备份流程。Skill 定义安全边界，CLI 执行实际备份。
 
-### Compatibility
+### 兼容性
 
-| Agent | Installation | Support |
+| Agent | 安装方式 | 支持形式 |
 |---|---|---|
-| Claude Code | Marketplace plugin in this repository | Packaged plugin |
-| Codex, Gemini CLI, Kimi Code, OpenCode, Hermes | Read the root `SKILL.md`, then run the repository CLI | Portable workflow |
-| Other agents with filesystem and shell access | Read the root `SKILL.md` and follow its commands | Portable workflow |
+| Claude Code | 使用本仓库的 Marketplace 插件 | 已打包原生插件 |
+| Codex、Gemini CLI、Kimi Code、OpenCode、Hermes | 读取根目录 `SKILL.md`，再执行仓库 CLI | 通用 Skill 流程 |
+| 其他支持文件系统和 Shell 的 Agent | 读取根目录 `SKILL.md` 并执行其中命令 | 通用 Skill 流程 |
 
-The repository does not claim a vendor-specific plugin for every agent. Each agent may have a different native installer; the portable contract is the root `SKILL.md` plus the standard-library CLI.
+本项目不宣称为每一种 Agent 都提供厂商专属插件。不同 Agent 的原生安装机制可能不同；跨 Agent 的标准契约就是根目录 `SKILL.md` 加标准库 CLI。
 
-## Your voice history is part of your digital life
+## 你的语音历史，也是你的数字生活记录
 
-Your voice conversations are more than application rows. They can contain ideas, decisions, memories, work notes, and the way you thought at a particular moment. Together with their transcripts and recordings, they form a personal digital record that can be difficult or impossible to recreate.
+语音对话不只是应用数据库里的几行记录。里面可能有你的想法、决定、记忆、工作笔记，以及某个时刻真实的思考过程。连同转写文本和录音，它们构成了很难重新创造的个人数字记录。
 
-That is why data preservation is a matter of informed control:
+因此，保存数据也是一种知情和主动的控制：
 
-- **Know what exists:** understand which conversations and recordings are stored locally.
-- **Keep a copy you control:** preserve your records before uninstalling an app, changing devices, or relying on a service whose pricing, quotas, or access rules may change.
-- **Choose what happens next:** a backup does not commit you to another provider. It simply keeps the option open.
+- **知道自己留下了什么**：了解哪些对话和录音正在本地保存。
+- **保留自己能控制的副本**：在卸载应用、更换设备，或服务的价格、额度和访问规则可能变化之前，先把重要记录保存下来。
+- **把选择权留给未来的自己**：备份并不要求你迁移到任何其他服务，只是保留之后继续选择的可能。
 
-This project does not make a legal determination about ownership or create rights that depend on local law or a provider's terms. It follows a practical principle: personal records should not become inaccessible merely because a product changes. If you created the conversation, keeping a private local copy is a reasonable act of privacy, continuity, and data portability.
+本项目不对数据权属作法律判断，也不创造取决于当地法律或服务条款的额外权利。它遵循一个实际原则：不应仅仅因为产品发生变化，个人记录就变得无法访问。如果这些对话由你创建，保留一份私密的本地副本，是对隐私、连续性和数据可携带性的合理保护。
 
-**Save first. Decide later.**
+**先保存，再决定。**
 
-## At a glance
+## 一眼看懂
 
-| Question | Answer |
+| 问题 | 答案 |
 |---|---|
-| Where does the data go? | A local directory you choose. |
-| Does the tool upload anything? | No. The backup path is local-only. |
-| Does it modify Typeless? | No. The source is opened read-only. |
-| What is preserved? | SQLite history, linked OGG recordings, manifest, JSONL, and readable Markdown. |
-| Which platforms are supported? | Windows and macOS. Linux is not a product target. |
-| Is migration included? | No. This project preserves your options without forcing a provider choice. |
+| 数据保存到哪里？ | 保存到你自己选择的本地目录。 |
+| 工具会上传数据吗？ | 不会，备份流程只写入本地。 |
+| 会修改 Typeless 吗？ | 不会，源数据库以只读方式打开。 |
+| 保存哪些内容？ | SQLite 历史、关联 OGG 录音、manifest、JSONL 和可读 Markdown。 |
+| 支持哪些平台？ | Windows 和 macOS，Linux 不属于产品支持范围。 |
+| 包含迁移功能吗？ | 不包含，项目先保存你的选择权，不强迫你选择任何服务商。 |
 
-## What it does — and does not do
+## 能做什么，以及不能做什么
 
-| Capability | Status |
+| 能力 | 状态 |
 |---|---|
-| Back up `typeless.db` | Supported |
-| Copy linked `Recordings/*.ogg` files | Supported |
-| Preserve a consistent SQLite snapshot | Supported |
-| Generate a manifest with integrity metadata | Supported |
-| Export records to JSONL | Supported |
-| Export a human-readable Markdown history | Supported |
-| Upload data to a server | **Never** |
-| Modify or delete the Typeless source | **Never** |
-| Import history into Doubao or another voice service | Not in scope |
-| Transcribe or translate audio | Not in scope |
+| 备份 `typeless.db` | 支持 |
+| 复制关联的 `Recordings/*.ogg` | 支持 |
+| 保存一致的 SQLite 快照 | 支持 |
+| 生成包含完整性信息的 manifest | 支持 |
+| 将记录导出为 JSONL | 支持 |
+| 导出普通人可读的 Markdown 历史 | 支持 |
+| 向服务器上传数据 | **永不支持** |
+| 修改或删除 Typeless 源数据 | **永不支持** |
+| 导入豆包或其他语音软件 | 当前范围之外 |
+| 转写或翻译音频 | 当前范围之外 |
 
-## Architecture
+## 架构
 
 ```mermaid
 flowchart LR
-    A[Typeless local profile\nWindows/macOS discovery] --> B[Read-only SQLite connection]
+    A[Typeless 本地目录\nWindows/macOS 动态发现] --> B[只读 SQLite 连接]
     A --> C[Recordings\\*.ogg]
-    B --> D[SQLite online backup\ntypeless.db]
-    C --> E[Byte-preserving copy\nRecordings\\]
-    D --> F[Backup directory]
+    B --> D[SQLite 在线备份\ntypeless.db]
+    C --> E[逐字节复制\nRecordings\\]
+    D --> F[备份目录]
     E --> F
-    F --> G[manifest.json\ncounts · sizes · SHA-256]
-    F --> H[Optional JSONL export\nlocal archive/search]
+    F --> G[manifest.json\n数量 · 大小 · SHA-256]
+    F --> H[可选 JSONL 导出\n本地归档/搜索]
 
     classDef source fill:#fff7ed,stroke:#c2410c,color:#7c2d12
     classDef safe fill:#eff6ff,stroke:#2563eb,color:#1e3a8a
@@ -136,27 +136,27 @@ flowchart LR
     class D,E,F,G,H safe
 ```
 
-## Quick start
+## 快速开始
 
-### Requirements
+### 环境要求
 
-- Windows or macOS with Typeless installed
-- Python 3.10 or later
-- Read access to the Typeless local profile
-- An empty destination directory or a new destination path
+- 已安装 Typeless 的 Windows 或 macOS 系统
+- Python 3.10 或更高版本
+- 对 Typeless 本地目录具有读取权限
+- 一个空的目标目录，或一个尚不存在的目标路径
 
-No third-party Python packages are required.
+不需要安装第三方 Python 依赖。
 
-### Create a backup
+### 创建备份
 
-Open PowerShell in this repository:
+在本仓库目录打开 PowerShell：
 
 ```powershell
 python .\typeless_backup.py backup `
   --output "D:\TypelessBackups\typeless-2026-09-19"
 ```
 
-The tool searches the platform's known application-data roots for a profile containing `typeless.db` and `Recordings/`. It does not depend on a fixed username or WSL path. To specify a profile explicitly:
+工具会在平台应用数据目录中搜索包含 `typeless.db` 和 `Recordings/` 的候选目录，不依赖固定用户名或 WSL 路径。也可以显式指定源目录：
 
 ```powershell
 python .\typeless_backup.py backup `
@@ -164,14 +164,14 @@ python .\typeless_backup.py backup `
   --output "D:\TypelessBackups\typeless-2026-09-19"
 ```
 
-On macOS:
+在 macOS 上：
 
 ```bash
 python3 ./typeless_backup.py backup \
   --output "$HOME/TypelessBackups/typeless-2026-09-19"
 ```
 
-A successful backup contains:
+备份成功后，目录结构如下：
 
 ```text
 D:\TypelessBackups\typeless-2026-09-19\
@@ -181,9 +181,9 @@ D:\TypelessBackups\typeless-2026-09-19\
 └── manifest.json
 ```
 
-### Export records to JSONL
+### 导出 JSONL 记录
 
-The export is generated from the backup, not from the live application data:
+导出基于备份目录，而不是直接读取正在运行的应用数据：
 
 ```powershell
 python .\typeless_backup.py export-jsonl `
@@ -191,11 +191,11 @@ python .\typeless_backup.py export-jsonl `
   --output "D:\TypelessBackups\typeless-2026-09-19\history.jsonl"
 ```
 
-Each line is one conversation record. Audio remains as separate OGG files and is referenced by a relative path such as `Recordings/<file>.ogg`.
+每一行对应一条对话记录。音频仍以独立 OGG 文件保存，并通过类似 `Recordings/<file>.ogg` 的相对路径引用。
 
-### Export a human-readable history
+### 导出可直接阅读的历史记录
 
-`history.jsonl` is a machine-readable export and may look dense in a normal editor. For a readable transcript with timestamps and audio references, generate Markdown:
+`history.jsonl` 是面向程序的导出格式，在普通编辑器中会比较密集。要生成带时间、转写文本和音频引用的可读版本：
 
 ```powershell
 python .\typeless_backup.py export-markdown `
@@ -203,84 +203,84 @@ python .\typeless_backup.py export-markdown `
   --output "D:\TypelessBackups\typeless-2026-09-19\history.md"
 ```
 
-Open `history.md` in VS Code, Typora, Obsidian, or any Markdown viewer.
+然后用 VS Code、Typora、Obsidian 或其他 Markdown 阅读器打开 `history.md`。
 
-## Data and integrity model
+## 数据与完整性模型
 
-The backup is deliberately simple and inspectable:
+备份结构保持简单、透明、易检查：
 
-| Artifact | Purpose |
+| 文件 | 用途 |
 |---|---|
-| `typeless.db` | SQLite snapshot of the local Typeless history database |
-| `Recordings/*.ogg` | Original local voice recordings, copied byte-for-byte |
-| `manifest.json` | Backup format, creation time, database SHA-256, file count, byte count, and database statistics |
-| `history.jsonl` | Optional line-delimited export of `history_v2` records |
-| `history.md` | Optional human-readable transcript export with timestamps and audio references |
+| `typeless.db` | Typeless 本地历史数据库的 SQLite 快照 |
+| `Recordings/*.ogg` | 原始本地语音录音，按字节复制 |
+| `manifest.json` | 备份格式、创建时间、数据库 SHA-256、文件数量、字节数和数据库统计 |
+| `history.jsonl` | 可选的 `history_v2` 记录逐行导出文件 |
+| `history.md` | 可选的普通人可读历史记录，包含时间和音频引用 |
 
-The source database is opened in read-only mode and copied through SQLite's online backup API. The destination database is checked with `PRAGMA integrity_check`. The command refuses to overwrite a non-empty destination.
+源数据库以只读模式打开，并通过 SQLite Online Backup API 复制。目标数据库会执行 `PRAGMA integrity_check` 校验。目标目录非空时，工具会拒绝覆盖。
 
-## Privacy and security
+## 隐私与安全
 
-This tool is designed for personal archives, not cloud synchronization. It helps you exercise practical control over records that matter to you without sending them to another service.
+这个工具面向个人归档，而不是云端同步。它帮助你在不把数据交给其他服务的前提下，对真正重要的个人记录保留实际控制权。
 
-- **No network calls:** the backup command does not upload or transmit your data.
-- **Read-only source:** it does not update, delete, vacuum, or migrate the Typeless database.
-- **Local destination only:** choose a drive or folder you control.
-- **Private output:** backups contain conversation text and audio. Protect them like personal records.
-- **Do not commit backups:** never place `typeless.db`, `Recordings`, `*.ogg`, or `history.jsonl` in a public repository.
-- **Encryption is your responsibility:** use BitLocker, an encrypted archive, or an access-controlled backup disk when appropriate.
+- **不进行网络请求**：备份命令不会上传或传输你的数据。
+- **源数据只读**：不会更新、删除、清理或迁移 Typeless 数据库。
+- **目标留在本地**：请使用自己控制的磁盘或目录。
+- **输出属于私密数据**：备份包含对话文本和音频，应按个人记录保护。
+- **不要提交备份**：不要把 `typeless.db`、`Recordings`、`*.ogg` 或 `history.jsonl` 放入公开仓库。
+- **加密由用户负责**：必要时使用 BitLocker、加密压缩包或受访问控制的备份磁盘。
 
-This project does not claim to defeat operating-system permissions, disk encryption, Typeless account controls, or future changes to the Typeless storage format.
+本项目不声称能够绕过操作系统权限、磁盘加密、Typeless 账号控制，或未来 Typeless 对本地存储格式的调整。
 
-## Known scope and limitations
+## 当前范围与限制
 
-- The tool supports Windows and macOS only. It discovers candidate local profiles and validates that each contains `typeless.db` and `Recordings/`; use `--source` when your Typeless version uses another location.
-- Linux and WSL are development environments only and are intentionally rejected by the backup CLI.
-- It is a backup and archival utility, not a Typeless replacement.
-- It does not import records into Doubao or another voice application.
-- It does not convert OGG audio, run speech recognition, or translate transcripts.
-- A live application may continue writing new records while a backup is created. SQLite provides a consistent database snapshot; close Typeless first if you need a strict application-level freeze.
-- Always verify the manifest and keep the original source until you have independently confirmed the backup.
+- 当前支持 Windows 和 macOS。工具会动态发现候选本地目录，并验证其中存在 `typeless.db` 和 `Recordings/`；如果你的 Typeless 版本使用其他位置，请通过 `--source` 指定。
+- Linux 和 WSL 仅作为开发环境，备份 CLI 会明确拒绝 Linux 运行环境。
+- 这是备份与归档工具，不是 Typeless 替代品。
+- 不支持将记录导入豆包或其他语音软件。
+- 不转换 OGG 音频，不运行语音识别，也不翻译转写文本。
+- 应用运行期间可能继续写入新记录。SQLite 能提供一致的数据库快照；如果需要应用层面的严格冻结，请先关闭 Typeless。
+- 在独立确认备份有效前，请始终保留原始数据和源目录。
 
-## Development
+## 开发
 
-Run the self-contained test suite:
+运行自包含测试：
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The tests use a temporary SQLite database and synthetic audio bytes. They never access a user's Typeless profile.
+测试使用临时 SQLite 数据库和模拟音频字节，不会访问用户的 Typeless 目录。
 
-## Contributing
+## 参与贡献
 
-Issues and focused pull requests are welcome.
+欢迎提交 Issue 和聚焦明确的 Pull Request。
 
-1. Open an issue describing the observed storage layout, failure, or proposed improvement.
-2. Do not attach real conversation databases, audio, transcripts, credentials, or tokens.
-3. Use synthetic fixtures or a schema-only reproduction.
-4. Run the test suite and `git diff --check` before opening a pull request.
+1. 描述你观察到的存储布局、错误或改进建议。
+2. 不要上传真实对话数据库、音频、转写文本、凭证或 Token。
+3. 使用模拟数据，或提供只包含 schema 的复现样例。
+4. 提交 Pull Request 前运行测试和 `git diff --check`。
 
-For security-sensitive reports, avoid publishing private data in an issue. Until a dedicated security policy is added, use a private GitHub contact channel and include only the minimum reproducible details.
+对于安全敏感问题，不要在公开 Issue 中发布私人数据。在专门的安全政策建立前，请通过 GitHub 私密联系渠道反馈，并只提供最小复现信息。
 
-## Roadmap
+## 路线图
 
-The project intentionally prioritizes safe preservation before adding migration features.
+项目优先保证安全保存，再考虑迁移能力。
 
-- [x] Read-only SQLite snapshot
-- [x] Recording preservation
-- [x] Manifest and integrity checks
-- [x] JSONL archival export
-- [ ] Versioned schema compatibility notes
-- [ ] Optional encrypted archive workflow
-- [x] Windows/macOS candidate profile discovery
+- [x] 只读 SQLite 快照
+- [x] 录音文件保留
+- [x] manifest 与完整性校验
+- [x] JSONL 归档导出
+- [ ] 版本化 schema 兼容说明
+- [ ] 可选的加密归档流程
+- [x] Windows/macOS 候选目录发现
 
-Import adapters, cloud sync, and automatic transcription are deliberately not part of the current roadmap.
+导入适配器、云同步和自动转写目前不在路线图中。
 
-## License
+## 许可证
 
-Released under the [MIT License](./LICENSE).
+本项目采用 [MIT License](./LICENSE) 开源。
 
-## Acknowledgements
+## 致谢
 
-Built with Python's standard library and SQLite's online backup API. The project is intentionally dependency-light so the backup path remains easy to inspect and reproduce.
+本项目基于 Python 标准库和 SQLite Online Backup API 构建。依赖保持精简，是为了让备份路径更容易检查、理解和复现。
