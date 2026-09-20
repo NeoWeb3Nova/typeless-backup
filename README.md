@@ -38,6 +38,20 @@ Typeless stores conversation history locally. When pricing, quotas, or product p
 
 Your data stays on your machine. This repository contains the tool, not anyone's conversations.
 
+## Your voice history is part of your digital life
+
+Your voice conversations are more than application rows. They can contain ideas, decisions, memories, work notes, and the way you thought at a particular moment. Together with their transcripts and recordings, they form a personal digital record that can be difficult or impossible to recreate.
+
+That is why data preservation is a matter of informed control:
+
+- **Know what exists:** understand which conversations and recordings are stored locally.
+- **Keep a copy you control:** preserve your records before uninstalling an app, changing devices, or relying on a service whose pricing, quotas, or access rules may change.
+- **Choose what happens next:** a backup does not commit you to another provider. It simply keeps the option open.
+
+This project does not make a legal determination about ownership or create rights that depend on local law or a provider's terms. It follows a practical principle: personal records should not become inaccessible merely because a product changes. If you created the conversation, keeping a private local copy is a reasonable act of privacy, continuity, and data portability.
+
+**Save first. Decide later.**
+
 ## What it does — and does not do
 
 | Capability | Status |
@@ -157,7 +171,7 @@ The source database is opened in read-only mode and copied through SQLite's onli
 
 ## Privacy and security
 
-This tool is designed for personal archives, not cloud synchronization.
+This tool is designed for personal archives, not cloud synchronization. It helps you exercise practical control over records that matter to you without sending them to another service.
 
 - **No network calls:** the backup command does not upload or transmit your data.
 - **Read-only source:** it does not update, delete, vacuum, or migrate the Typeless database.
