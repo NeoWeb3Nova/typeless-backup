@@ -7,6 +7,10 @@
 面向 Windows 和 macOS Typeless 的隐私优先、只读备份与归档工具。
 保存本地 SQLite 数据库及其关联的 OGG 录音，不向任何服务器上传你的对话内容。
 
+![Typeless Backup 本地优先的数据保存流程](./assets/typeless-backup-flow.svg)
+
+> **由你创建的个人记录，应该尽可能继续对你可用。** 先保存，再决定。
+
 <p>
   <a href="./README.md">English</a> ·
   <a href="https://github.com/NeoWeb3Nova/typeless-backup/issues">问题反馈</a> ·
@@ -86,6 +90,17 @@ https://github.com/NeoWeb3Nova/typeless-backup
 本项目不对数据权属作法律判断，也不创造取决于当地法律或服务条款的额外权利。它遵循一个实际原则：不应仅仅因为产品发生变化，个人记录就变得无法访问。如果这些对话由你创建，保留一份私密的本地副本，是对隐私、连续性和数据可携带性的合理保护。
 
 **先保存，再决定。**
+
+## 一眼看懂
+
+| 问题 | 答案 |
+|---|---|
+| 数据保存到哪里？ | 保存到你自己选择的本地目录。 |
+| 工具会上传数据吗？ | 不会，备份流程只写入本地。 |
+| 会修改 Typeless 吗？ | 不会，源数据库以只读方式打开。 |
+| 保存哪些内容？ | SQLite 历史、关联 OGG 录音、manifest、JSONL 和可读 Markdown。 |
+| 支持哪些平台？ | Windows 和 macOS，Linux 不属于产品支持范围。 |
+| 包含迁移功能吗？ | 不包含，项目先保存你的选择权，不强迫你选择任何服务商。 |
 
 ## 能做什么，以及不能做什么
 

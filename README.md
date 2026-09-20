@@ -7,6 +7,10 @@
 A privacy-first, read-only backup and archival tool for Typeless on Windows and macOS.
 Preserve the local SQLite database and linked OGG recordings without uploading your conversations anywhere.
 
+![Typeless Backup local-first preservation flow](./assets/typeless-backup-flow.svg)
+
+> **Personal records should remain available to the person who created them.** Save first. Decide later.
+
 <p>
   <a href="./README.zh-CN.md">简体中文</a> ·
   <a href="https://github.com/NeoWeb3Nova/typeless-backup/issues">Issues</a> ·
@@ -86,6 +90,17 @@ That is why data preservation is a matter of informed control:
 This project does not make a legal determination about ownership or create rights that depend on local law or a provider's terms. It follows a practical principle: personal records should not become inaccessible merely because a product changes. If you created the conversation, keeping a private local copy is a reasonable act of privacy, continuity, and data portability.
 
 **Save first. Decide later.**
+
+## At a glance
+
+| Question | Answer |
+|---|---|
+| Where does the data go? | A local directory you choose. |
+| Does the tool upload anything? | No. The backup path is local-only. |
+| Does it modify Typeless? | No. The source is opened read-only. |
+| What is preserved? | SQLite history, linked OGG recordings, manifest, JSONL, and readable Markdown. |
+| Which platforms are supported? | Windows and macOS. Linux is not a product target. |
+| Is migration included? | No. This project preserves your options without forcing a provider choice. |
 
 ## What it does — and does not do
 

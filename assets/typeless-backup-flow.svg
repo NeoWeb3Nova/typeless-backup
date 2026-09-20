@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">Typeless Backup local data preservation flow</title>
+  <desc id="desc">A Typeless local profile is read without modification, copied into a local archive, verified, and exported as readable history.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" x2="1">
+      <stop offset="0" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#1e293b" flood-opacity=".12"/>
+    </filter>
+    <style>
+      .title{font:700 42px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .subtitle{font:400 21px Inter,Segoe UI,Arial,sans-serif;fill:#475569}
+      .label{font:700 22px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .small{font:400 17px Inter,Segoe UI,Arial,sans-serif;fill:#64748b}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2}
+      .line{stroke:#64748b;stroke-width:4;fill:none;stroke-linecap:round}
+      .dot{fill:#4f46e5}
+    </style>
+  </defs>
+  <rect width="1600" height="760" rx="28" fill="url(#bg)"/>
+  <text x="90" y="92" class="title">Keep the record. Keep the choice.</text>
+  <text x="90" y="132" class="subtitle">A local-first, read-only path from Typeless history to a verified personal archive.</text>
+
+  <path d="M330 370 H430 M680 370 H780 M1030 370 H1130" class="line"/>
+  <path d="m414 356 18 14-18 14 M764 356 782 370 764 384 M1114 356 1132 370 1114 384" class="line"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="245" width="260" height="250" rx="22" class="card"/>
+    <rect x="420" y="245" width="260" height="250" rx="22" class="card"/>
+    <rect x="770" y="245" width="260" height="250" rx="22" class="card"/>
+    <rect x="1120" y="245" width="360" height="250" rx="22" class="card"/>
+  </g>
+
+  <g transform="translate(142 285)">
+    <rect x="0" y="35" width="105" height="82" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="4"/>
+    <path d="M15 35V20c0-14 75-14 75 0v15" fill="none" stroke="#f97316" stroke-width="4"/>
+    <path d="M25 60h55M25 83h38" stroke="#fb923c" stroke-width="6" stroke-linecap="round"/>
+    <path d="M128 52c10-15 10 50 20 35s10-65 20-40 10 56 20 34 10-28 20-12" fill="none" stroke="#f97316" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <text x="200" y="440" text-anchor="middle" class="label">Typeless profile</text>
+  <text x="200" y="470" text-anchor="middle" class="small">SQLite · transcripts · OGG</text>
+
+  <g transform="translate(490 285)">
+    <rect x="22" y="20" width="100" height="120" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="4"/>
+    <path d="M45 54h55M45 78h55M45 102h38" stroke="#60a5fa" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="145" cy="112" r="34" fill="#fff" stroke="#2563eb" stroke-width="4"/>
+    <path d="M145 92v21l13 8" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <text x="550" y="440" text-anchor="middle" class="label">Read-only snapshot</text>
+  <text x="550" y="470" text-anchor="middle" class="small">SQLite Online Backup API</text>
+
+  <g transform="translate(840 285)">
+    <path d="M35 58h120l-12 78H47z" fill="#eef2ff" stroke="#4f46e5" stroke-width="4"/>
+    <path d="M28 58h135l-17-24H45z" fill="#e0e7ff" stroke="#4f46e5" stroke-width="4"/>
+    <path d="M67 88h55M67 111h42" stroke="#818cf8" stroke-width="7" stroke-linecap="round"/>
+    <path d="m154 34 8 13 15 2-11 11 3 15-15-7-14 7 3-15-11-11 15-2z" fill="#22c55e" stroke="#15803d" stroke-width="3"/>
+  </g>
+  <text x="900" y="440" text-anchor="middle" class="label">Verified archive</text>
+  <text x="900" y="470" text-anchor="middle" class="small">Manifest · SHA-256 · integrity</text>
+
+  <g transform="translate(1190 285)">
+    <rect x="0" y="15" width="160" height="125" rx="12" fill="#f8fafc" stroke="#0f172a" stroke-width="4"/>
+    <path d="M20 50h120M20 75h95M20 100h125" stroke="#94a3b8" stroke-width="7" stroke-linecap="round"/>
+    <path d="M205 48c12-24 12 58 24 30s12-60 24-29 12 54 24 29 12-19 24-2" fill="none" stroke="#4f46e5" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="250" cy="115" r="28" fill="#ecfdf5" stroke="#16a34a" stroke-width="4"/>
+    <path d="m237 115 9 9 18-21" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="1300" y="440" text-anchor="middle" class="label">Your local formats</text>
+  <text x="1300" y="470" text-anchor="middle" class="small">history.md · JSONL · audio</text>
+
+  <circle cx="90" cy="650" r="8" class="dot"/>
+  <text x="115" y="658" class="small">No upload</text>
+  <circle cx="330" cy="650" r="8" class="dot"/>
+  <text x="355" y="658" class="small">No source mutation</text>
+  <circle cx="650" cy="650" r="8" class="dot"/>
+  <text x="675" y="658" class="small">Windows + macOS</text>
+  <circle cx="910" cy="650" r="8" class="dot"/>
+  <text x="935" y="658" class="small">Portable skill workflow</text>
+</svg>
