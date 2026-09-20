@@ -1,0 +1,14 @@
+{
+  "name": "typeless-backup",
+  "version": "0.2.0",
+  "description": "Private, read-only Typeless history backup for Windows and macOS.",
+  "skills": "./skills/",
+  "author": {
+    "name": "NeoWeb3Nova",
+    "url": "https://github.com/NeoWeb3Nova"
+  },
+  "homepage": "https://github.com/NeoWeb3Nova/typeless-backup",
+  "repository": "https://github.com/NeoWeb3Nova/typeless-backup",
+  "license": "MIT",
+  "keywords": ["typeless", "backup", "privacy", "sqlite", "voice", "data-portability"]
+}

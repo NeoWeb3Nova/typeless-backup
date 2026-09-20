@@ -38,15 +38,30 @@ Typeless 会在本地保存语音对话记录。当产品价格、额度或服�
 
 你的数据留在自己的设备上。本仓库只包含工具，不包含任何人的对话内容。
 
-## 作为 Hermes Skill 安装
+## 作为 Coding-Agent Skill 安装
 
-本仓库本身就是一个可安装的 Hermes Skill。将仓库克隆到 Hermes 的 skills 目录即可；根目录的 `SKILL.md` 是 Skill 入口，`typeless_backup.py` 是本地执行程序：
+根目录的 `SKILL.md` 是跨 Agent 的 Skill 入口，不绑定某一家 Agent 厂商。只要 Agent 能读取 GitHub 仓库并运行本地命令，就可以直接使用它。
 
-```bash
-git clone https://github.com/NeoWeb3Nova/typeless-backup.git ~/.hermes/skills/typeless-backup
+### Claude Code 插件
+
+可以通过本仓库提供的 Claude Code 插件安装：
+
+```text
+/plugin marketplace add https://github.com/NeoWeb3Nova/typeless-backup
+/plugin install typeless-backup@typeless-backup
 ```
 
-在 Windows 上，将仓库克隆到 `%USERPROFILE%\.hermes\skills\typeless-backup`。安装后重新启动 Hermes 会话，使 Skill 目录重新加载。
+插件元数据位于 `.claude-plugin/`，打包后的 Skill 位于 `plugins/typeless-backup/`。
+
+### 其他 Coding Agent
+
+对于 Codex、Gemini CLI、Kimi Code、OpenCode、Hermes 或其他本地 Coding Agent，提供仓库地址，并要求 Agent 先读取 `SKILL.md`：
+
+```text
+https://github.com/NeoWeb3Nova/typeless-backup
+```
+
+根目录 CLI 和 Claude 插件内的 `scripts/typeless_backup.py` 使用同一套标准库备份流程。Skill 定义安全边界，CLI 执行实际备份。
 
 ## 你的语音历史，也是你的数字生活记录
 

@@ -38,15 +38,30 @@ Typeless stores conversation history locally. When pricing, quotas, or product p
 
 Your data stays on your machine. This repository contains the tool, not anyone's conversations.
 
-## Install as a Hermes Skill
+## Install as a Coding-Agent Skill
 
-This repository is itself a self-contained Hermes Skill. Clone it into the Hermes skills directory; the root `SKILL.md` is the skill entrypoint and `typeless_backup.py` is the local executor:
+The root `SKILL.md` is the portable skill entrypoint. It is intentionally not tied to one agent vendor. Coding agents that can read a GitHub repository and run local commands can follow it directly.
 
-```bash
-git clone https://github.com/NeoWeb3Nova/typeless-backup.git ~/.hermes/skills/typeless-backup
+### Claude Code plugin
+
+Install the packaged Claude Code plugin from this repository:
+
+```text
+/plugin marketplace add https://github.com/NeoWeb3Nova/typeless-backup
+/plugin install typeless-backup@typeless-backup
 ```
 
-On Windows, clone the same repository into `%USERPROFILE%\.hermes\skills\typeless-backup`. Start a new Hermes session after installation so the skill catalog is reloaded.
+The plugin metadata lives in `.claude-plugin/` and the packaged skill lives in `plugins/typeless-backup/`.
+
+### Other coding agents
+
+For Codex, Gemini CLI, Kimi Code, OpenCode, Hermes, or another local coding agent, provide this repository URL and ask the agent to read `SKILL.md`:
+
+```text
+https://github.com/NeoWeb3Nova/typeless-backup
+```
+
+The root CLI and the Claude plugin's bundled `scripts/typeless_backup.py` use the same standard-library workflow. The skill defines the safety rules; the CLI performs the backup.
 
 ## Your voice history is part of your digital life
 

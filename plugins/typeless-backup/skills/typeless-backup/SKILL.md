@@ -30,21 +30,21 @@ Run commands from this repository. The CLI discovers candidate profiles and vali
 Windows PowerShell:
 
 ```powershell
-python .\typeless_backup.py backup `
+python .\scripts/typeless_backup.py backup `
   --output "D:\TypelessBackups\typeless-backup"
 ```
 
 macOS:
 
 ```bash
-python3 ./typeless_backup.py backup \
+python3 ./scripts/typeless_backup.py backup \
   --output "$HOME/TypelessBackups/typeless-backup"
 ```
 
 When discovery cannot find the profile, pass it explicitly:
 
 ```text
-python[3] typeless_backup.py backup --source <Typeless-data-directory> --output <new-local-directory>
+python[3] scripts/typeless_backup.py backup --source <Typeless-data-directory> --output <new-local-directory>
 ```
 
 ## Procedure
@@ -54,13 +54,13 @@ python[3] typeless_backup.py backup --source <Typeless-data-directory> --output 
 3. Export machine-readable records from the backup, never from the live profile:
 
    ```text
-   python[3] typeless_backup.py export-jsonl --backup <backup-directory> --output <backup-directory>/history.jsonl
+   python[3] scripts/typeless_backup.py export-jsonl --backup <backup-directory> --output <backup-directory>/history.jsonl
    ```
 
 4. Export the human-readable transcript:
 
    ```text
-   python[3] typeless_backup.py export-markdown --backup <backup-directory> --output <backup-directory>/history.md
+   python[3] scripts/typeless_backup.py export-markdown --backup <backup-directory> --output <backup-directory>/history.md
    ```
 
 5. Keep the original Typeless profile until the backup and its recording count are independently verified.
@@ -79,7 +79,7 @@ Run the self-contained checks:
 
 ```text
 python[3] -m unittest discover -s tests -v
-python[3] -m py_compile typeless_backup.py
+python[3] -m py_compile scripts/typeless_backup.py
 ```
 
 A complete run has passing tests, a successful compile, a valid `manifest.json`, `PRAGMA integrity_check = ok`, and matching database/recording counts.

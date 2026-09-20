@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "typeless-backup",
+  "description": "Preserve Typeless voice history with private, read-only backups on Windows and macOS.",
+  "owner": {
+    "name": "NeoWeb3Nova",
+    "url": "https://github.com/NeoWeb3Nova"
+  },
+  "plugins": [
+    {
+      "name": "typeless-backup",
+      "description": "Read-only Typeless SQLite, OGG, JSONL, and Markdown backup workflow.",
+      "source": "./plugins/typeless-backup",
+      "category": "productivity",
+      "tags": ["typeless", "backup", "privacy", "sqlite", "voice", "data-portability"]
+    }
+  ]
+}
