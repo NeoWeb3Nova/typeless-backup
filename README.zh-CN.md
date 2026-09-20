@@ -63,6 +63,16 @@ https://github.com/NeoWeb3Nova/typeless-backup
 
 根目录 CLI 和 Claude 插件内的 `scripts/typeless_backup.py` 使用同一套标准库备份流程。Skill 定义安全边界，CLI 执行实际备份。
 
+### 兼容性
+
+| Agent | 安装方式 | 支持形式 |
+|---|---|---|
+| Claude Code | 使用本仓库的 Marketplace 插件 | 已打包原生插件 |
+| Codex、Gemini CLI、Kimi Code、OpenCode、Hermes | 读取根目录 `SKILL.md`，再执行仓库 CLI | 通用 Skill 流程 |
+| 其他支持文件系统和 Shell 的 Agent | 读取根目录 `SKILL.md` 并执行其中命令 | 通用 Skill 流程 |
+
+本项目不宣称为每一种 Agent 都提供厂商专属插件。不同 Agent 的原生安装机制可能不同；跨 Agent 的标准契约就是根目录 `SKILL.md` 加标准库 CLI。
+
 ## 你的语音历史，也是你的数字生活记录
 
 语音对话不只是应用数据库里的几行记录。里面可能有你的想法、决定、记忆、工作笔记，以及某个时刻真实的思考过程。连同转写文本和录音，它们构成了很难重新创造的个人数字记录。

@@ -63,6 +63,16 @@ https://github.com/NeoWeb3Nova/typeless-backup
 
 The root CLI and the Claude plugin's bundled `scripts/typeless_backup.py` use the same standard-library workflow. The skill defines the safety rules; the CLI performs the backup.
 
+### Compatibility
+
+| Agent | Installation | Support |
+|---|---|---|
+| Claude Code | Marketplace plugin in this repository | Packaged plugin |
+| Codex, Gemini CLI, Kimi Code, OpenCode, Hermes | Read the root `SKILL.md`, then run the repository CLI | Portable workflow |
+| Other agents with filesystem and shell access | Read the root `SKILL.md` and follow its commands | Portable workflow |
+
+The repository does not claim a vendor-specific plugin for every agent. Each agent may have a different native installer; the portable contract is the root `SKILL.md` plus the standard-library CLI.
+
 ## Your voice history is part of your digital life
 
 Your voice conversations are more than application rows. They can contain ideas, decisions, memories, work notes, and the way you thought at a particular moment. Together with their transcripts and recordings, they form a personal digital record that can be difficult or impossible to recreate.
