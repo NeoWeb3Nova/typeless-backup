@@ -38,6 +38,16 @@ Typeless 会在本地保存语音对话记录。当产品价格、额度或服�
 
 你的数据留在自己的设备上。本仓库只包含工具，不包含任何人的对话内容。
 
+## 作为 Hermes Skill 安装
+
+本仓库本身就是一个可安装的 Hermes Skill。将仓库克隆到 Hermes 的 skills 目录即可；根目录的 `SKILL.md` 是 Skill 入口，`typeless_backup.py` 是本地执行程序：
+
+```bash
+git clone https://github.com/NeoWeb3Nova/typeless-backup.git ~/.hermes/skills/typeless-backup
+```
+
+在 Windows 上，将仓库克隆到 `%USERPROFILE%\.hermes\skills\typeless-backup`。安装后重新启动 Hermes 会话，使 Skill 目录重新加载。
+
 ## 你的语音历史，也是你的数字生活记录
 
 语音对话不只是应用数据库里的几行记录。里面可能有你的想法、决定、记忆、工作笔记，以及某个时刻真实的思考过程。连同转写文本和录音，它们构成了很难重新创造的个人数字记录。

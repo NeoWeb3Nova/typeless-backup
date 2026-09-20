@@ -38,6 +38,16 @@ Typeless stores conversation history locally. When pricing, quotas, or product p
 
 Your data stays on your machine. This repository contains the tool, not anyone's conversations.
 
+## Install as a Hermes Skill
+
+This repository is itself a self-contained Hermes Skill. Clone it into the Hermes skills directory; the root `SKILL.md` is the skill entrypoint and `typeless_backup.py` is the local executor:
+
+```bash
+git clone https://github.com/NeoWeb3Nova/typeless-backup.git ~/.hermes/skills/typeless-backup
+```
+
+On Windows, clone the same repository into `%USERPROFILE%\.hermes\skills\typeless-backup`. Start a new Hermes session after installation so the skill catalog is reloaded.
+
 ## Your voice history is part of your digital life
 
 Your voice conversations are more than application rows. They can contain ideas, decisions, memories, work notes, and the way you thought at a particular moment. Together with their transcripts and recordings, they form a personal digital record that can be difficult or impossible to recreate.
